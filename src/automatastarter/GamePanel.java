@@ -5,9 +5,12 @@
  */
 package automatastarter;
 
+
+import java.awt.Color;
 import utils.CardSwitcher;
 import utils.ImageUtil;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,13 +39,12 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
 
     CardSwitcher switcher; // This is the parent panel
     Timer animTimer;
-    // Image img1 = Toolkit.getDefaultToolkit().getImage("yourFile.jpg");
-    BufferedImage img1;
-    //variables to control your animation elements
-    int x = 0;
-    int y = 10;
-    int xdir = 5;
-    int lineX = 0;
+    //Image predator = Toolkit.getDefaultToolkit().getImage("predator.png");
+    //Image prey = Toolkit.getDefaultToolkit().getImage("prey.webp");
+    BufferedImage[] images;
+
+    boolean isGamePaused = false;
+    PredatorPreyGrid grid;
 
     /**
      * Creates new form GamePanel
@@ -50,8 +52,11 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
     public GamePanel(CardSwitcher p) {
         initComponents();
 
-        img1 = ImageUtil.loadAndResizeImage("yourFile.jpg", 300, 300);//, WIDTH, HEIGHT)//ImageIO.read(new File("yourFile.jpg"));
-
+        images = new BufferedImage[4];
+        grid = new PredatorPreyGrid(getPreferredSize().width);
+        grid.initializeGrid();
+        
+        
         this.setFocusable(true);
 
         // tell the program we want to listen to the mouse
@@ -59,7 +64,7 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
         //tells us the panel that controls this one
         switcher = p;
         //create and start a Timer for animation
-        animTimer = new Timer(10, new AnimTimerTick());
+        animTimer = new Timer(1000, new AnimTimerTick());
         animTimer.start();
 
         //set up the key bindings
@@ -69,14 +74,14 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
 
     private void setupKeys() {
         //these lines map a physical key, to a name, and then a name to an 'action'.  You will change the key, name and action to suit your needs
-        this.getInputMap().put(KeyStroke.getKeyStroke("LEFT"), "leftKey");
-        this.getActionMap().put("leftKey", new Move("LEFT"));
+        this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "enter");
+        this.getActionMap().put("enter", new Move("enter"));
 
-        this.getInputMap().put(KeyStroke.getKeyStroke("W"), "wKey");
-        this.getActionMap().put("wKey", new Move("w"));
+        this.getInputMap().put(KeyStroke.getKeyStroke("N"), "nKey");
+        this.getActionMap().put("nKey", new Move("n"));
 
-        this.getInputMap().put(KeyStroke.getKeyStroke("D"), "dKey");
-        this.getActionMap().put("dKey", new Move("d"));
+        this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "space");
+        this.getActionMap().put("space", new Move("space"));
 
         this.getInputMap().put(KeyStroke.getKeyStroke("X"), "xKey");
         this.getActionMap().put("xKey", new Move("x"));
@@ -84,10 +89,10 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (img1 != null) {
-            g.drawImage(img1, x, y, this);
+        if (grid != null) {
+            grid.drawGrid(g, images);
         }
-        g.drawLine(lineX, 0, 300, 300);
+        g.setColor(Color.black);
     }
 
     /**
@@ -99,41 +104,35 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-
+        setBackground(new java.awt.Color(255, 255, 255));
+        setMinimumSize(new java.awt.Dimension(500, 500));
+        setName(""); // NOI18N
+        setPreferredSize(new java.awt.Dimension(500, 500));
+        setRequestFocusEnabled(false);
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentShown(java.awt.event.ComponentEvent evt) {
                 formComponentShown(evt);
             }
         });
 
-        jLabel1.setText("Game");
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(174, 174, 174)
-                .addComponent(jLabel1)
-                .addContainerGap(199, Short.MAX_VALUE))
+            .addGap(0, 500, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(135, 135, 135)
-                .addComponent(jLabel1)
-                .addContainerGap(151, Short.MAX_VALUE))
+            .addGap(0, 500, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
-        lineX = 0;
+ 
     }//GEN-LAST:event_formComponentShown
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -143,9 +142,24 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      * @param me
      */
     public void mouseClicked(MouseEvent me) {
-        System.out.println("Click: " + me.getX() + ":" + me.getY());
-        x = 5;
-        y = 5;
+        int gridCol = me.getX()/grid.cellSize;
+        int gridRow = me.getY()/grid.cellSize;
+        
+        if (grid.grid[gridRow][gridCol] ==  grid.NONE){
+            grid.addEntity(gridRow, gridCol, grid.PREY);
+        } else if (grid.grid[gridRow][gridCol] ==  grid.PREY){
+            grid.removeEntity(gridRow, gridCol, grid.PREY);
+            grid.addEntity(gridRow, gridCol, grid.PREDATOR);
+        } else if (grid.grid[gridRow][gridCol] ==  grid.PREDATOR){
+            grid.removeEntity(gridRow, gridCol, grid.PREDATOR);
+            grid.addEntity(gridRow, gridCol, grid.HABITAT);
+        } else if (grid.grid[gridRow][gridCol] ==  grid.HABITAT){
+            grid.addEntity(gridRow, gridCol, grid.FOOD);
+        } else {
+            grid.addEntity(gridRow, gridCol, grid.NONE);
+        }
+        
+
     }
 
     /**
@@ -154,7 +168,7 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      * @param me
      */
     public void mousePressed(MouseEvent me) {
-        System.out.println("Press: " + me.getX() + ":" + me.getY());
+
     }
 
     /**
@@ -163,7 +177,7 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      * @param me
      */
     public void mouseReleased(MouseEvent me) {
-        System.out.println("Release: " + me.getX() + ":" + me.getY());
+
     }
 
     /**
@@ -172,7 +186,7 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      * @param me
      */
     public void mouseEntered(MouseEvent me) {
-        System.out.println("Enter: " + me.getX() + ":" + me.getY());
+
     }
 
     /**
@@ -181,7 +195,7 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
      * @param me
      */
     public void mouseExited(MouseEvent me) {
-        System.out.println("Exit: " + me.getX() + ":" + me.getY());
+
     }
 
     /**
@@ -199,11 +213,10 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
             // here you decide what you want to happen if a particular key is pressed
             System.out.println("llll" + key);
             switch(key){
-                case "d": x+=2; break;
-                case "x": animTimer.stop(); switcher.switchToCard(EndPanel.CARD_NAME); break;
-            }
-            if (key.equals("d")) {
-                x = x + 2;
+                case "d": System.out.println(); break;
+                case "enter": grid.updateGrid(); repaint(); break;
+                case "n": animTimer.stop(); switcher.switchToCard(EndPanel.CARD_NAME); break;
+                case "space": isGamePaused = !isGamePaused; break;
             }
             
         }
@@ -217,8 +230,10 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
     private class AnimTimerTick implements ActionListener {
 
         public void actionPerformed(ActionEvent ae) {
-            //the stuff we want to change every clock tick
-            lineX++;
+            if (isGamePaused){
+                grid.updateGrid();
+            }
+            
             //force redraw
             repaint();
         }

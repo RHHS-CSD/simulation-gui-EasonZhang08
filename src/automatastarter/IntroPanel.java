@@ -36,7 +36,8 @@ public class IntroPanel extends javax.swing.JPanel {
         GameButton = new javax.swing.JButton();
         infoButton = new javax.swing.JButton();
 
-        GameButton.setText("Game");
+        GameButton.setText("Start");
+        GameButton.setPreferredSize(new java.awt.Dimension(100, 23));
         GameButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 GameButtonActionPerformed(evt);
@@ -56,23 +57,20 @@ public class IntroPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(151, 151, 151)
-                        .addComponent(GameButton))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(99, 99, 99)
-                        .addComponent(infoButton)))
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addGap(155, 155, 155)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(GameButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(infoButton))
+                .addContainerGap(164, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(130, 130, 130)
-                .addComponent(GameButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(184, 184, 184)
+                .addComponent(GameButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(57, 57, 57)
                 .addComponent(infoButton)
-                .addContainerGap(116, Short.MAX_VALUE))
+                .addContainerGap(213, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
