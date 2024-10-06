@@ -90,10 +90,6 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
         //enter -> update the grid once
         this.getInputMap().put(KeyStroke.getKeyStroke("ENTER"), "enter");
         this.getActionMap().put("enter", new Move("enter"));
-        
-        //n -> exit program
-        this.getInputMap().put(KeyStroke.getKeyStroke("N"), "nKey");
-        this.getActionMap().put("nKey", new Move("n"));
 
         //space -> pause/continue program
         this.getInputMap().put(KeyStroke.getKeyStroke("SPACE"), "space");
@@ -422,7 +418,6 @@ public class GamePanel extends javax.swing.JPanel implements MouseListener {
             // here you decide what you want to happen if a particular key is pressed
             switch(key){
                 case "enter": grid.updateGrid(); repaint(); break; //update the grid once
-                case "n": animTimer.stop(); switcher.switchToCard(EndPanel.CARD_NAME); break; //go to end panel
                 case "space": isGamePaused = !isGamePaused; break; // pause/continue program
             }
             
