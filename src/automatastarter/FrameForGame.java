@@ -81,17 +81,17 @@ public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        cardPanel.setPreferredSize(new java.awt.Dimension(500, 500));
+        cardPanel.setPreferredSize(new java.awt.Dimension(900, 700));
 
         javax.swing.GroupLayout cardPanelLayout = new javax.swing.GroupLayout(cardPanel);
         cardPanel.setLayout(cardPanelLayout);
         cardPanelLayout.setHorizontalGroup(
             cardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
+            .addGap(0, 900, Short.MAX_VALUE)
         );
         cardPanelLayout.setVerticalGroup(
             cardPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
+            .addGap(0, 700, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

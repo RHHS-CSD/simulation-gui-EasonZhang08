@@ -7,21 +7,86 @@ package automatastarter;
 
 import utils.CardSwitcher;
 import java.awt.CardLayout;
+import java.awt.Graphics;
+import java.awt.event.ActionEvent;
 import javax.swing.JPanel;
+import javax.swing.Timer;
+import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import utils.ImageUtil;
 
 /**
  *
  * @author michael.roy-diclemen
  */
-public class IntroPanel extends javax.swing.JPanel {
-        public static final String CARD_NAME = "intro";
+public class IntroPanel extends javax.swing.JPanel implements ActionListener {
+    public static final String CARD_NAME = "intro";
     CardSwitcher switcher = null;
+    private Timer timer;
+    
+    //the image array for animation
+    BufferedImage[] framesRabbit;
+    int currentFrameRabbit = 0;
+    BufferedImage[] framesWaterfall;
+    int currentFrameWaterfall = 0;
+    
     /**
      * Creates new form IntroPanel
      */
     public IntroPanel(CardSwitcher p) {
         initComponents();
         switcher = p;
+        loadFrames();
+        
+        timer = new Timer(200, this); // Set timer 
+        timer.start(); // Start the animation
+    }
+    
+    private void loadFrames() {
+        framesRabbit = new BufferedImage[3]; // initialize the frame array
+        framesWaterfall = new BufferedImage[8];
+        
+        //this one has three frames, fill the array with images
+        framesRabbit[0] = ImageUtil.loadAndResizeImage("rabbit_normal.png", 200, 200);
+        framesRabbit[1] = ImageUtil.loadAndResizeImage("rabbit_up.png", 200, 200);
+        framesRabbit[2] = ImageUtil.loadAndResizeImage("rabbit_down.png", 200, 200);
+        
+        //this one has eight frames, but it's the same thing
+        framesWaterfall[0] = ImageUtil.loadAndResizeImage("W1001.png", 500, 650);
+        framesWaterfall[1] = ImageUtil.loadAndResizeImage("W1002.png", 500, 650);
+        framesWaterfall[2] = ImageUtil.loadAndResizeImage("W1003.png", 500, 650);
+        framesWaterfall[3] = ImageUtil.loadAndResizeImage("W1004.png", 500, 650);
+        framesWaterfall[4] = ImageUtil.loadAndResizeImage("W1005.png", 500, 650);
+        framesWaterfall[5] = ImageUtil.loadAndResizeImage("W1006.png", 500, 650);
+        framesWaterfall[6] = ImageUtil.loadAndResizeImage("W1007.png", 500, 650);
+        framesWaterfall[7] = ImageUtil.loadAndResizeImage("W1008.png", 500, 650);
+
+    }
+    
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g); 
+        //draw the current image in the image array
+        g.drawImage(framesRabbit[currentFrameRabbit], 0, 450, this);
+        g.drawImage(framesWaterfall[currentFrameWaterfall], 550, 20, this);
+    }
+    
+    public void actionPerformed(ActionEvent e) {
+        //update the frame
+        currentFrameRabbit++;
+        currentFrameWaterfall++;
+        
+        // Loop back to the first frame when reaching the end
+        if (currentFrameRabbit >= framesRabbit.length) {
+            currentFrameRabbit = 0;
+        }
+        
+        if (currentFrameWaterfall >= framesWaterfall.length) {
+            currentFrameWaterfall = 0;
+        }
+        
+        
+        // Repaint the panel (calls paintComponent)
+        repaint();
     }
 
     /**
@@ -35,8 +100,15 @@ public class IntroPanel extends javax.swing.JPanel {
 
         GameButton = new javax.swing.JButton();
         infoButton = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        setBackground(new java.awt.Color(204, 255, 255));
+        setMinimumSize(new java.awt.Dimension(900, 700));
+        setPreferredSize(new java.awt.Dimension(900, 700));
 
         GameButton.setText("Start");
+        GameButton.setBorderPainted(false);
+        GameButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         GameButton.setPreferredSize(new java.awt.Dimension(100, 23));
         GameButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -44,7 +116,7 @@ public class IntroPanel extends javax.swing.JPanel {
             }
         });
 
-        infoButton.setText("I don't know why I'm here");
+        infoButton.setText("Simulation Information");
         infoButton.setToolTipText("");
         infoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -52,25 +124,35 @@ public class IntroPanel extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setFont(new java.awt.Font("Sinhala MN", 1, 48)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Predators And Preys");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(155, 155, 155)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(GameButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(infoButton))
-                .addContainerGap(164, Short.MAX_VALUE))
+                .addGap(207, 207, 207)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(41, 41, 41)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(GameButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(infoButton, javax.swing.GroupLayout.DEFAULT_SIZE, 409, Short.MAX_VALUE))))
+                .addContainerGap(221, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(184, 184, 184)
-                .addComponent(GameButton, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57)
-                .addComponent(infoButton)
-                .addContainerGap(213, Short.MAX_VALUE))
+                .addGap(267, 267, 267)
+                .addComponent(jLabel1)
+                .addGap(27, 27, 27)
+                .addComponent(GameButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(infoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(242, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -86,5 +168,6 @@ public class IntroPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton GameButton;
     private javax.swing.JButton infoButton;
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
