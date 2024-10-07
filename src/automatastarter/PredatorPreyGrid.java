@@ -258,19 +258,37 @@ public class PredatorPreyGrid {
                 }
             case 3:
                 {
-                    int radius = 3;
-                    //this pattern 
-                    for (int row = centerRow - radius; row <= centerRow + radius; row++) {
-                        for (int col = centerCol - radius; col <= centerCol + radius; col++) {
-                            if (row >= 0 && row < GRIDSIZE && col >= 0 && col < GRIDSIZE) {
-                                if (grid[row][col] == NONE) {
-                                    grid[row][col] = FOOD;
-                                    numFood++;
-                                    totalEntities++;
-                                }
-                            }
+                    //this pattern gives a pattern of preys on the left side and predators on the right side, 
+                    //seperated by a column of food and a column of habitats
+                    
+                    // spawn preys on the left side
+                    for (int row = 0; row < GRIDSIZE; row++) {
+                        for (int col = 0; col < centerCol - 1; col++) {
+                            spawnEntity(PREY, row, col);
                         }
-                    }       break;
+                    }
+
+                    // Place HABITAT column at midCol - 1
+                    for (int row = 0; row < GRIDSIZE; row++) {
+                        if (!(row == centerRow - 1 || row == centerRow)) { // Skip central 2 cells
+                            spawnEntity(HABITAT, row, centerCol - 1);
+                        }
+                    }
+
+                    // Place FOOD column at the middle
+                    for (int row = 0; row < GRIDSIZE; row++) {
+                        if (!(row == centerRow - 1 || row == centerRow)) { // Skip central 2 cells
+                            spawnEntity(FOOD, row, centerCol);
+                        }
+                    }
+
+                    // Right side with PREDATORs
+                    for (int row = 0; row < GRIDSIZE; row++) {
+                        for (int col = centerCol + 1; col < GRIDSIZE; col++) {
+                            spawnEntity(PREDATOR, row, col);
+                        }
+                    }
+                    break;
                 }
             case 4:
                 //spawn a block of each entity
@@ -417,7 +435,8 @@ public class PredatorPreyGrid {
                 default:
                     break;
             }
-            totalEntities++;
+            if (target != NONE)
+                totalEntities++;
         }
     }
     
