@@ -11,7 +11,7 @@ import javax.swing.JPanel;
 
 /**
  *
- * @author michael.roy-diclemen
+ * @author Eason Zhang
  */
 public class InfoPanel extends javax.swing.JPanel {
     public static final String CARD_NAME = "info";

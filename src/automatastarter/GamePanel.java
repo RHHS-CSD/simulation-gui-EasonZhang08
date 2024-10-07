@@ -31,7 +31,7 @@ import javax.swing.Timer;
 
 /**
  *
- * @author michael.roy-diclemen
+ * @author Eason Zhang
  */
 public class GamePanel extends javax.swing.JPanel implements MouseListener {
 

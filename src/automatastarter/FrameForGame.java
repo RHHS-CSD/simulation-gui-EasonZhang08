@@ -30,7 +30,7 @@ import java.awt.event.ComponentAdapter;
 
 /**
  *
- * @author michael.roy-diclemen
+ * @author Eason Zhang
  */
 public class FrameForGame extends javax.swing.JFrame implements CardSwitcher {
 

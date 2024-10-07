@@ -17,7 +17,7 @@ import utils.ImageUtil;
 
 /**
  *
- * @author michael.roy-diclemen
+ * @author Eason Zhang
  */
 public class IntroPanel extends javax.swing.JPanel implements ActionListener {
     public static final String CARD_NAME = "intro";
